@@ -1,91 +1,32 @@
-
 <?php
     session_start();
-
+    
     if( isset($_SESSION['user'])){
         header("Location: profile.php");
     }
+    include('connect.php');
 
-    if( isset( $_POST["submit"] ) )
-    {   
-
-        function valid($data){
-            $data=trim(stripslashes(htmlspecialchars($data)));
-            return $data;
-        }
-
-        $inuser = valid( $_POST["username"] );
-        $inkey = valid( $_POST["password"] );
- 
-        include("connect.php");
-
-        $query = "SELECT user_name, pass, name, join_date FROM users WHERE user_name='$inuser'";
-
-        $result = mysqli_query( $conn, $query);
-        if(mysqli_error($conn)){
-            echo "<script>window.alert('Something Goes Wrong. Try Again');</script>";
-        }
-        else if( mysqli_num_rows($result) > 0 ){
-            while( $row = mysqli_fetch_assoc($result) ){
-				
-                $user = $row['user_name'];
-                $pass = $row['pass'];
-                $name = $row['name'];
-               
-                $date = $row['join_date'];
-            }
-
-            if(  $inuser==$user&& $pass==$inkey){
-                $_SESSION['user'] = $user;
-                $_SESSION['name'] = $name;
-               
-                $_SESSION['date'] = $date;
-                header('Location: Index.php');
-            }
-            else{
-                echo "<script>window.alert('Wrong Username or Password Combination. Try Again');</script>";
-            }
-        }
-        else{
-            echo "<script>window.alert('No Such User exist in database');</script>";
-        }
-        mysqli_close($conn);
-    }
 ?>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>
-			Schoolra
-		</title>
-		 <link type="text/css" rel="stylesheet" href="css/style.css">
-        <link type="text/css" rel="stylesheet" href="Style.css">
+    <head>
+        <title> Schoolora </title>
+         <meta charset="utf-8">
+   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link type="text/css" rel="stylesheet" href="css/style.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link type="text/css" rel="stylesheet" href="css/material.css">
         <link type="text/css" rel="stylesheet" href="fonts/font.css">
         <link rel="icon" href="images/icon1.png" >
-		<link href="Style.css" rel="stylesheet">
-		<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-		 <!-- Sripts -->
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        <script>window.jQuery || document.write('<script type="text/javascript" src="js/jquery-3.2.1.min.js"><\/script>')</script>
-        <script type="text/javascript" src="js/script.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<style>
+        <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   <style>
   body {
       font: 400 15px/1.8 Lato, sans-serif;
       color: #777;
@@ -208,19 +149,50 @@
   .dropdown-menu li a:hover {
       background-color: red !important;
   }
- 
- 
+  footer {
+      background-color: #2d2d30;
+      color: #f5f5f5;
+      padding: 32px;
+  }
+  footer a {
+      color: #f5f5f5;
+  }
+  footer a:hover {
+      color: #777;
+      text-decoration: none;
+  }  
   .form-control {
       border-radius: 0;
   }
   textarea {
       resize: none;
   }
+	  textarea{
+                display: none;
+                width: 300px;
+                height: 50px;
+                background: #FC0;
+                color: #000;
+                padding: 10px;
+                margin: 5px 0 -14px; 
+            }
+            .ans_sub{
+                display: none;
+                padding: 0 10px;
+                height: 30px;
+                line-height: 30px;
+            }
+            .pop{
+                display: none;
+                text-align: center;
+                margin: 151.5px auto;
+                font-size: 12px;
+            }
   </style>
-	</head>
-	<body id="_5">
-	
-    
+    </head>
+    <body id="_6" >
+        <!-- navigation bar -->
+       <div id="myPage" data-spy="scroll" data-target=".navbar" data-offset="50">
 	<nav class="navbar navbar-default navbar-fixed-top">
 	
   <div class="container-fluid">
@@ -236,8 +208,12 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="Index.php">HOME</a></li>
         
-         
+        
+ 
             <li><a href="#">Browse Questions</a></li>
+  
+
+            
             
         
        
@@ -260,7 +236,7 @@
             ?>
             <li><a href="#">My Questions</a></li>
          <li><a href="#tour">Hi  <?php echo $_SESSION["user"]; ?></a></li>
-        <li> <a href="#">Log out</a></li>
+        <li> <a href="logout.php">Log out</a></li>
          <?php
                 }
             ?>
@@ -269,42 +245,85 @@
     </div>
   </div>
 </nav>
- 
-		 <!-- content -->
-        <div id="content" >
         
-        <center>
-                <div class="heading">
-                    <h1 class="logo"><div id="i"></div><div id="ntro">Schoolora</div></h1>
-                    <p id="tag-line"></p>
-                </div>
-                <form action="<?php echo htmlspecialchars( $_SERVER["PHP_SELF"] ); ?>" method="post" >
-                    <input name="username" id="user" type="text" title="Username" placeholder="Username" required>
-                    <input name="password" id="key" type="password" title="Password" placeholder="Password" required>
-                    <i class="material-icons" id="lock">lock</i>
-                    <i class="material-icons" id="person">person</i>
-                    <div id="button-block">
-                        <center>
-                            <div class="buttons"><input name="submit" type="submit" value="Log In" class="up-in"></div>
-                            <div class="buttons" id="new"><input type="button" value="Create a new account" class="up-in" id="tosign"></div>
-                        </center>
+        <!-- content -->
+        <div id="content">
+            <div id="sf">
+                <center>
+                    <div class="heading">
+                        <h1 class="logo"><div id="i"></div><div id="ntro">Schoolora</div></h1>
+                        
                     </div>
-                   
-                </form>
-			</center>
+
+                    <form action="<?php echo htmlspecialchars( $_SERVER["PHP_SELF"] ); ?>" method="post" enctype="multipart/form-data">
+                        <input name="username" id="user" type="text" title="This will be your parmanent Id." placeholder="Enter your Email id" required>
+                        <input name="password" id="key" type="password" title="Password must contain at least 8 characters including alphabets,numbers, and symbols." placeholder="Create a Strong Password" required>
+                        <i class="material-icons" id="lock">lock</i>
+                        <i class="material-icons" id="person">person</i>
+                        <input name="name" id="name" type="text" title="Although, you will be called by your name only" placeholder="Enter your Full Name" required>
+                        
+                        
+                        
+
+                        <div id="button-block">
+                            <center>
+                                <div class="buttons"><input name="submit" type="submit" value="Create An Account" class="up-in"></div>
+                                <div class="buttons" id="new"><input type="button" value="Already a member : Log In" class="up-in" id="tolog"></div>
+                            </center>
+                        </div>
+                    </form>
+                </center>
+            </div>
+            
+            <div id="ta">
+                <h1>Thank You For Registering With Us.</h1>
+            </div>
+            
         </div>
+        
+        <?php
+        
+            if( isset( $_POST["submit"] ) )
+            {
+
+                function valid($data){
+                    $data=trim(stripslashes(htmlspecialchars($data)));
+                    return $data;
+                }
+
+                $username = valid( $_POST["username"] );
+                $password = valid( $_POST["password"] );
+                
+                $name = valid( $_POST["name"] );
+                $email = valid( $_POST["email"] );
+
+                $query = "INSERT INTO users values( NULL, '$name','$username', '$password', CURRENT_TIMESTAMP )";
+                if(mysqli_error($conn)){
+                    echo "<script>window.alert('Something Goes Wrong. Try Again');</script>";
+                }
+//                echo $query;
+                else if( mysqli_query( $conn, $query) ){
+                    echo "<style>#sf{display: none;} #ta{display:block;}</style>";
+                }
+                else{
+//                    echo mysqli_error($conn);
+                    echo "<script>window.alert('Username Already Exist !! Try Again');</script>";
+                }
+                mysqli_close($conn);
+            }
+        
+        ?>
         
         <!-- Footer -->
-<div id="footer">
-            &copy; 2018 &bull; Schoolora.
+        <div id="footer" style="padding:20px;">
+            &copy; 2018 &bull; SCHOOLORA.
         </div>
-<!-- Sripts -->
+        
+        <!-- Sripts -->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script>window.jQuery || document.write('<script type="text/javascript" src="js/jquery-3.2.1.min.js"><\/script>')</script>
         <script type="text/javascript" src="js/script.js"></script>
-
-        
-        
-	  
-	</body>
+		</div>
+    </body>
+    
 </html>

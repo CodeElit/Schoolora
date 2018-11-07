@@ -8,14 +8,14 @@ body{
     z-index: 1;
     font-family: "Segoe UI",Arial,sans-serif;
     font-size: 15px;
-    background: #ddd;
+    background: #fff;
     min-width: 1000px;
     margin: 0 auto;
     font-weight: 500;
 }
 
 a,a:hover{
-    color: #FF0;
+    color: #000;
     cursor: pointer;
     text-decoration: none;
 }
@@ -92,12 +92,13 @@ a li:hover{
 
 /* Content */
 #content{
-    min-width: 900px;
+   min-width: 900px;
     color: #333;
-    box-sizing: border-box;
-    padding: 100px 0;
-    background: #ddd;
+    box-sizing:content-box;
+    padding: 100px 0px 200px;
+    background: #fff;
     margin-bottom: 20px;
+	margin-right:800px;
 }
 
 /* full heading */
@@ -180,9 +181,11 @@ input[type="password"]:hover{
 
 /* Footer */
 #footer{
-    display: block;
-    background: #FA0;
-    color: #000;
+	
+    display: subgrid;
+	
+    background: #2d2d30;
+    color: #d5d5d5;
     text-align: center;
     font-size: 15px;
     padding: 30px;
@@ -429,13 +432,14 @@ small#sml{
 
 /* Login Page */
 #_5 #content{
-    margin: 30px auto;
-}
+    margin: 3px auto;
+	}
 
 #_5 #content .heading,
 #_6 #content .heading{
     margin-top: -20px;
     margin-bottom: 15px;
+	
 }
 
 #user,#key,#name,#mailbox{
@@ -535,7 +539,7 @@ small#sml{
 }
 
 #sign-up{
-    display: block;
+    display: inline-flex;
     position: relative;
     top: -50px;
 }

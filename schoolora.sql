@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2018 at 09:58 PM
+-- Generation Time: Nov 07, 2018 at 06:59 PM
 -- Server version: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -111,7 +111,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`uid`, `name`, `user_name`, `pass`, `join_date`) VALUES
 (1, 'root', 'root', NULL, '2018-11-05 15:33:17'),
-(2, 'Jeevottam Lokurti', 'jeevottam', 'jeevo123', '2018-11-06 18:23:18');
+(2, 'Jeevottam Lokurti', 'jeevottam', 'jeevo123', '2018-11-06 18:23:18'),
+(3, 'Jeevottam l', '', '', '2018-11-07 13:00:34'),
+(4, 'Jeevottam l', '', '', '2018-11-07 13:03:10'),
+(5, 'Chart', 'jeevottamlokurti@gma', 'jeevo', '2018-11-07 13:05:12');
 
 --
 -- Indexes for dumped tables
@@ -161,7 +164,7 @@ ALTER TABLE `quans`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

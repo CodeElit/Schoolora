@@ -19,6 +19,12 @@ session_start();
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="css/material.css">
+        <link type="text/css" rel="stylesheet" href="fonts/font.css">
+        <link rel="icon" href="images/icon1.png" >
+        <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
@@ -202,19 +208,19 @@ session_start();
       <ul class="nav navbar-nav navbar-right">
         <li><a href="Index.php">HOME</a></li>
         
-         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Question
-          <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">My Questions</a></li>
+        
+ 
             <li><a href="#">Browse Questions</a></li>
+  
+
+            
             
         
        
        
-          </ul>
+        
          
-        </li>
+       
         
        
         <?php 
@@ -228,8 +234,9 @@ session_start();
                 }
                 else{
             ?>
+            <li><a href="#">My Questions</a></li>
          <li><a href="#tour">Hi  <?php echo $_SESSION["user"]; ?></a></li>
-        <li> <a href="#">Log out</a></li>
+        <li> <a href="logout.php">Log out</a></li>
          <?php
                 }
             ?>
@@ -238,7 +245,7 @@ session_start();
     </div>
   </div>
 </nav>
- <div id="content" style="margin-top:300px">
+ <div id="content" style="margin-left:300px">
             <div id="searchbox">
                 <center>
                     <div class="heading">
@@ -362,24 +369,9 @@ session_start();
                 } // isset for submit
             ?>
         </div>
-<!-- Footer -->
-<div class="footer" style="position: fixed;
-	left: 0;
-	border: 0;
-	width: 100%;
-	float:bottom;
-	margin-top:650px;">
-<footer class="footer">
-
-  <!-- Copyright -->
-  <div class="footer-copyright text-center py-3" >© 2018 
-    <a href="Index.php"> Schoolora</a>
-  </div>
-  <!-- Copyright -->
-
-</footer>
-<!-- Footer -->
-</div>
+<div id="footer">
+            &copy; 2018 &bull; Schoolora.
+        </div>
 </div>
 	</body>
 </html>

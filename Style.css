@@ -1,6 +1,6 @@
 body { padding-top:60px; padding-left: 450px ; margin: auto;
     width: 100%;
-
+   
    }
 .form-control { margin-bottom: 20px;
 
@@ -10,7 +10,7 @@ body { padding-top:60px; padding-left: 450px ; margin: auto;
 	left: 0;
 	border: 0;
 	width: 100%;
-
+	
 }
 .panel-heading {
     padding: 5px 15px;
@@ -37,7 +37,7 @@ body { padding-top:60px; padding-left: 450px ; margin: auto;
   }
   h3, h4 {
       margin: 10px 0 30px 0;
-      letter-spacing: 10px;
+      letter-spacing: 10px;      
       font-size: 20px;
       color: #111;
   }
@@ -56,7 +56,7 @@ body { padding-top:60px; padding-left: 450px ; margin: auto;
   }
   .carousel-inner img {
       -webkit-filter: grayscale(90%);
-      filter: grayscale(90%); /* make all photos black and white */
+      filter: grayscale(90%); /* make all photos black and white */ 
       width: 100%; /* Set width to 100% */
       margin: auto;
   }
@@ -120,7 +120,7 @@ body { padding-top:60px; padding-left: 450px ; margin: auto;
       height: 400px;
       -webkit-filter: grayscale(100%);
       filter: grayscale(100%);
-  }
+  }  
   .navbar {
       font-family: Montserrat, sans-serif;
       margin-bottom: 0;
@@ -130,7 +130,7 @@ body { padding-top:60px; padding-left: 450px ; margin: auto;
       letter-spacing: 4px;
       opacity: 0.9;
   }
-  .navbar li a, .navbar .navbar-brand {
+  .navbar li a, .navbar .navbar-brand { 
       color: #d5d5d5 !important;
   }
   .navbar-nav li a:hover {
@@ -153,18 +153,7 @@ body { padding-top:60px; padding-left: 450px ; margin: auto;
   .dropdown-menu li a:hover {
       background-color: red !important;
   }
-  footer {
-      background-color: #2d2d30;
-      color: #f5f5f5;
-      padding: 32px;
-  }
-  footer a {
-      color: #f5f5f5;
-  }
-  footer a:hover {
-      color: #777;
-      text-decoration: none;
-  }
+ 
   .form-control {
       border-radius: 0;
   }
