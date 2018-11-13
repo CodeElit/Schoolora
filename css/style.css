@@ -98,7 +98,8 @@ a li:hover{
     padding: 100px 0px 200px;
     background: #fff;
     margin-bottom: 20px;
-	margin-right:800px;
+	
+		;
 }
 
 /* full heading */
@@ -182,7 +183,7 @@ input[type="password"]:hover{
 /* Footer */
 #footer{
 	
-    display: subgrid;
+    display: block;
 	
     background: #2d2d30;
     color: #d5d5d5;
@@ -194,7 +195,19 @@ input[type="password"]:hover{
     word-spacing: 5px;
 }
 /* Footer Ends */
-
+#foot{
+	
+    display: block;
+	
+    background: #2d2d30;
+    color: #d5d5d5;
+    text-align: center;
+    font-size: 15px;
+    padding: 30px;
+    font-family: Georgia;
+    font-variant: small-caps;
+    word-spacing: 5px;
+}
 
 /* Contacts Page */
 #_4 #content{
@@ -431,14 +444,18 @@ small#sml{
 
 
 /* Login Page */
-#_5 #content{
-    margin: 3px auto;
+#_4 #content{
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
 	}
 
 #_5 #content .heading,
 #_6 #content .heading{
-    margin-top: -20px;
-    margin-bottom: 15px;
+    
+	margin-left: 0px;
 	
 }
 

@@ -2,7 +2,7 @@
     session_start();
     
     if(! isset($_SESSION['user'])){
-        header("Location: Index.php");
+        header("Location: index.php");
     }
 
     if(isset($_COOKIE[session_name()])){
@@ -10,5 +10,5 @@
     }
     session_unset();
     session_destroy();
-    header("Location: Index.php");
+    header("Location: index.php");
 ?>

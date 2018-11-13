@@ -1,18 +1,62 @@
+
 <?php
     session_start();
-    
+
     if( isset($_SESSION['user'])){
         header("Location: profile.php");
     }
-    include('connect.php');
 
+    if( isset( $_POST["submit"] ) )
+    {   
+
+        function valid($data){
+            $data=trim(stripslashes(htmlspecialchars($data)));
+            return $data;
+        }
+
+        $inuser = valid( $_POST["username"] );
+        $inkey = valid( $_POST["password"] );
+
+        include("connect.php");
+
+        $query = "SELECT username, password, name, email, join_date FROM users WHERE username='$inuser'";
+
+        $result = mysqli_query( $conn, $query);
+        if(mysqli_error($conn)){
+            echo "<script>window.alert('Something Goes Wrong. Try Again');</script>";
+        }
+        else if( mysqli_num_rows($result) > 0 ){
+            while( $row = mysqli_fetch_assoc($result) ){
+                $user = $row['username'];
+                $pass = $row['password'];
+                $name = $row['name'];
+                $email = $row['email'];
+                $date = $row['join_date'];
+            }
+
+            if( password_verify( $inkey, $pass ) ){
+                $_SESSION['user'] = $user;
+                $_SESSION['name'] = $name;
+                $_SESSION['email'] = $email;
+                $_SESSION['date'] = $date;
+                header('Location: index.php');
+            }
+            else{
+                echo "<script>window.alert('Wrong Username or Password Combination. Try Again');</script>";
+            }
+        }
+        else{
+            echo "<script>window.alert('No Such User exist in database');</script>";
+        }
+        mysqli_close($conn);
+    }
 ?>
 
 <!DOCTYPE html>
 <html>
     <head>
-        <title> Scchoolora </title>
-       <meta charset="utf-8">
+        <title> Schoolora </title>
+        <meta charset="utf-8">
    <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -190,9 +234,9 @@
             }
   </style>
     </head>
-    <body id="_6">
+    <body id="_5">
         <!-- navigation bar -->
-       <nav class="navbar navbar-default navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-top">
 	
   <div class="container-fluid">
     <div class="navbar-header">
@@ -207,12 +251,8 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="Index.php">HOME</a></li>
         
-        
- 
-           
-  
-
-            <li><a href="ask.php">Ask a Question</a></li>
+         
+            <li><a href="#">Browse Questions</a></li>
             
         
        
@@ -235,7 +275,7 @@
             ?>
             <li><a href="#">My Questions</a></li>
          <li><a href="#tour">Hi  <?php echo $_SESSION["user"]; ?></a></li>
-        <li> <a href="logout.php">Log out</a></li>
+        <li> <a href="#">Log out</a></li>
          <?php
                 }
             ?>
@@ -247,74 +287,30 @@
         
         <!-- content -->
         <div id="content">
-            <div id="sf">
-                <center>
-                    <div class="heading">
-                        <h1 class="logo"><div id="i"></div><div id="ntro">Schoolora</div></h1>
-                        
+            <center>
+                <div class="heading">
+                    <h1 class="logo"><div id="i"></div><div id="ntro">Schoolora</div></h1>
+                    
+                </div>
+                <form action="<?php echo htmlspecialchars( $_SERVER["PHP_SELF"] ); ?>" method="post" enctype="multipart/form-data">
+                    <input name="username" id="user" type="text" title="Username" placeholder="Username" required>
+                    <input name="password" id="key" type="password" title="Password" placeholder="Password" required>
+                    <i class="material-icons" id="lock">lock</i>
+                    <i class="material-icons" id="person">person</i>
+                    <div id="button-block">
+                        <center>
+                            <div class="buttons"><input name="submit" type="submit" value="Log In" class="up-in"></div>
+                            <div class="buttons" id="new"><input type="button" value="Create a new account" class="up-in" id="tosign"></div>
+                        </center>
                     </div>
-
-                    <form action="<?php echo htmlspecialchars( $_SERVER["PHP_SELF"] ); ?>" method="post" enctype="multipart/form-data">
-                        <input name="username" id="user" type="text" title="This will be your parmanent Id." placeholder="Create a Unique Username" required>
-                        <input name="password" id="key" type="password" title="Password must contain at least 8 characters including alphabets,numbers, and symbols." placeholder="Create a Strong Password" required>
-                        <i class="material-icons" id="lock">lock</i>
-                        <i class="material-icons" id="person">person</i>
-                        <input name="name" id="name" type="text" title="Although, you will be called by your name only" placeholder="Enter your Full Name" required>
-                        <input name="email" id="mailbox" type="email" title="Your Email id is in safe hands." placeholder="Enter your Email Id" required>
-                        <i class="material-icons" id="email">mail</i>
-                        <i class="material-icons" id="iden">perm_identity</i>
-
-                        <div id="button-block">
-                            <center>
-                                <div class="buttons"><input name="submit" type="submit" value="Create An Account" class="up-in"></div>
-                                <div class="buttons" id="new"><input type="button" value="Already a member : Log In" class="up-in" id="tolog"></div>
-                            </center>
-                        </div>
-                    </form>
-                </center>
-            </div>
-            
-            <div id="ta">
-                <h1>Thank You For Registering With Us.</h1>
-            </div>
-            
+                    <a href="contacts.php" id="trouble"><span>Having Trouble in login ? Contact Us</span></a>
+                </form>
+            </center>
         </div>
         
-        <?php
-        
-            if( isset( $_POST["submit"] ) )
-            {
-
-                function valid($data){
-                    $data=trim(stripslashes(htmlspecialchars($data)));
-                    return $data;
-                }
-
-                $username = valid( $_POST["username"] );
-                $password = valid( $_POST["password"] );
-                $password = password_hash($password, PASSWORD_DEFAULT);
-                $name = valid( $_POST["name"] );
-                $email = valid( $_POST["email"] );
-
-                $query = "INSERT INTO users values( NULL, '$username', '$password', '$name', '$email', CURRENT_TIMESTAMP )";
-                if(mysqli_error($conn)){
-                    echo "<script>window.alert('Something Goes Wrong. Try Again');</script>";
-                }
-//                echo $query;
-                else if( mysqli_query( $conn, $query) ){
-                    echo "<style>#sf{display: none;} #ta{display:block;}</style>";
-                }
-                else{
-//                    echo mysqli_error($conn);
-                    echo "<script>window.alert('Username Already Exist !! Try Again');</script>";
-                }
-                mysqli_close($conn);
-            }
-        
-        ?>
         
         <!-- Footer -->
-        <div id="footer" style="padding:20px;">
+        <div id="footer">
             &copy; 2018 &bull; Schoolora.
         </div>
         

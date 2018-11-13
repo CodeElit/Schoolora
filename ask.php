@@ -1,18 +1,15 @@
 <?php
     session_start();
-    
-    if( isset($_SESSION['user'])){
-        header("Location: profile.php");
-    }
     include('connect.php');
-
+    if(!isset($_SESSION['user']))
+        header("location: login.php");
 ?>
 
 <!DOCTYPE html>
 <html>
     <head>
-        <title> Scchoolora </title>
-       <meta charset="utf-8">
+        <title> Schoolora </title>
+         <meta charset="utf-8">
    <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -190,9 +187,9 @@
             }
   </style>
     </head>
-    <body id="_6">
+    <body id="ask">
         <!-- navigation bar -->
-       <nav class="navbar navbar-default navbar-fixed-top">
+        <nav class="navbar navbar-default navbar-fixed-top">
 	
   <div class="container-fluid">
     <div class="navbar-header">
@@ -209,7 +206,7 @@
         
         
  
-           
+            <li><a href="#">Browse Questions</a></li>
   
 
             <li><a href="ask.php">Ask a Question</a></li>
@@ -227,7 +224,7 @@
             ?>
         
         <li><a href="login.php">Sign In</a></li>
-        <li><a href="signup.php">Sign Up</a></li>
+        <li><a href="sign_up.php">Sign Up</a></li>
         
          <?php
                 }
@@ -244,40 +241,35 @@
     </div>
   </div>
 </nav>
-        
         <!-- content -->
         <div id="content">
             <div id="sf">
                 <center>
-                    <div class="heading">
+                    <div class="heading ask">
                         <h1 class="logo"><div id="i"></div><div id="ntro">Schoolora</div></h1>
                         
                     </div>
 
                     <form action="<?php echo htmlspecialchars( $_SERVER["PHP_SELF"] ); ?>" method="post" enctype="multipart/form-data">
-                        <input name="username" id="user" type="text" title="This will be your parmanent Id." placeholder="Create a Unique Username" required>
-                        <input name="password" id="key" type="password" title="Password must contain at least 8 characters including alphabets,numbers, and symbols." placeholder="Create a Strong Password" required>
-                        <i class="material-icons" id="lock">lock</i>
-                        <i class="material-icons" id="person">person</i>
-                        <input name="name" id="name" type="text" title="Although, you will be called by your name only" placeholder="Enter your Full Name" required>
-                        <input name="email" id="mailbox" type="email" title="Your Email id is in safe hands." placeholder="Enter your Email Id" required>
-                        <i class="material-icons" id="email">mail</i>
-                        <i class="material-icons" id="iden">perm_identity</i>
 
-                        <div id="button-block">
-                            <center>
-                                <div class="buttons"><input name="submit" type="submit" value="Create An Account" class="up-in"></div>
-                                <div class="buttons" id="new"><input type="button" value="Already a member : Log In" class="up-in" id="tolog"></div>
-                            </center>
-                        </div>
+                        <input name="question" type="text" title="Your Question..." placeholder="Ask Your question on our Community for greate user expereince..." id="question">
+
+                        <select name="cat">
+                            <option valus="Category">Category</option>
+                            <option value="Science">Science</option>
+                            <option value="Social Studies">Social Studies</option>
+                            <option value="English">English</option>
+                            <option value="Mathematics">Mathematics</option>
+                            
+                        </select>
+                        <input name="submit" type="submit" class="up-in" id="ask_submit">
                     </form>
                 </center>
             </div>
-            
-            <div id="ta">
-                <h1>Thank You For Registering With Us.</h1>
-            </div>
-            
+        </div>
+        
+        <div id="ask-ta">
+            <h1>Thank You.<br>Stay tunned for updates.</h1>
         </div>
         
         <?php
@@ -289,32 +281,50 @@
                     $data=trim(stripslashes(htmlspecialchars($data)));
                     return $data;
                 }
-
-                $username = valid( $_POST["username"] );
-                $password = valid( $_POST["password"] );
-                $password = password_hash($password, PASSWORD_DEFAULT);
-                $name = valid( $_POST["name"] );
-                $email = valid( $_POST["email"] );
-
-                $query = "INSERT INTO users values( NULL, '$username', '$password', '$name', '$email', CURRENT_TIMESTAMP )";
-                if(mysqli_error($conn)){
-                    echo "<script>window.alert('Something Goes Wrong. Try Again');</script>";
+                $question = valid( $_POST["question"] );
+                
+                $no = valid( $_POST["cat"]);
+                $question = addslashes($question);
+                $q = "SELECT * FROM quans WHERE question = '$question'";
+                $result = mysqli_query($conn,$q);
+                if(mysqli_error($conn))
+                    echo "<script>window.alert('Some Error Occured. Try Again or Contact Us.');</script>";
+                else if( $no == "Category"){
+                    echo "<script>window.alert('Choose a Category.');</script>";
                 }
-//                echo $query;
-                else if( mysqli_query( $conn, $query) ){
-                    echo "<style>#sf{display: none;} #ta{display:block;}</style>";
+                else if( mysqli_num_rows($result) == 0 ){
+                    $query = "INSERT INTO quans VALUES(NULL, '$question', NULL,'".$_SESSION['user']."',NULL)";
+                    $query1 = "INSERT INTO quacat SELECT q.id, c.name FROM quans as q, category as c WHERE q.question = '".$question."' AND c.name = '".$_POST['cat']."'";
+                   if( mysqli_query( $conn, $query)){
+					 $last_id = mysqli_insert_id($conn);
+$k="call vote($last_id);";
+					   $k1="call vote1($last_id);";
+	if( mysqli_query( $conn, $k)&&mysqli_query( $conn, $k1)){
+	echo 'done';};
+	
+					
+				   }
+					
+					if(mysqli_query( $conn, $query1)){
+                        echo "<style>#sf{display: none;} #ask-ta{display:block;}</style>";
+						
+                    }
+                    else{
+                        echo "<script>window.alert('Some Error Occured. Try Again or Contact Us.');</script>";
+                    }
                 }
                 else{
-//                    echo mysqli_error($conn);
-                    echo "<script>window.alert('Username Already Exist !! Try Again');</script>";
+                    echo "<script>window.alert('Question was already Asked. Search it on Home Page.');</script>";
                 }
+				
+                
                 mysqli_close($conn);
             }
         
         ?>
         
         <!-- Footer -->
-        <div id="footer" style="padding:20px;">
+        <div id="footer" style="padding:30px;">
             &copy; 2018 &bull; Schoolora.
         </div>
         

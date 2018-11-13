@@ -1,39 +1,10 @@
 <?php
     session_start();
     include('connect.php');
-        if(isset($_POST["ansubmit"])){
-        function valid($data){
-            $data = trim(stripslashes(htmlspecialchars($data)));
-            return $data;
-        }
-        $answer = valid($_POST["answer"]);
-        if($answer == NULL){
-            echo "<script>window.alert('Please Enter something.');</script>";
-        }
-        else{
-            $que = "";
-            if($_POST["nul"]==0){
-                if(strpos($_POST["preby"],$_SESSION["user"]) === false)
-                    $que = "update quans set answer=CONCAT(answer,'<br>or<br>".$_POST["answer"]."'), answeredby=CONCAT(answeredby,', @ ".$_SESSION["user"]."') where question like '%".$_POST["question"]."%'";
-                else
-                    $que = "update quans set answer=CONCAT(answer,'<br>or<br>".$_POST["answer"]."'), answeredby = '".$_SESSION["user"]."' where question like '%".$_POST["question"]."%'";
-            }
-            else
-                $que = "update quans set answer='".$_POST["answer"]."', answeredby = '".$_SESSION["user"]."' where question like '%".$_POST["question"]."%'";
-            if(mysqli_query($conn,$que)){
-                echo "<style>#searchbox{display: none;} #tb{display: block;}</style>";
-            }
-            else
-                echo mysqli_error($conn);
-        }
-    }
-if(isset($_SESSION['user'])){
-	if(isset($_POST['vote'])){
-		$qu="call userupvote(".$_POST['id'].",".$_SESSION["user"].");";
-		echo $qu;
-	}
-}
+    if(!isset($_SESSION['user']))
+        header("location: login.php");
 ?>
+
 
 
 <html>
@@ -45,7 +16,6 @@ if(isset($_SESSION['user'])){
    <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
   <link type="text/css" rel="stylesheet" href="css/style.css">
@@ -239,7 +209,7 @@ if(isset($_SESSION['user'])){
         
         
  
-            
+            <li><a href="#">Browse Questions</a></li>
   
 
             <li><a href="ask.php">Ask a Question</a></li>
@@ -263,7 +233,7 @@ if(isset($_SESSION['user'])){
                 }
                 else{
             ?>
-            <li><a href="myquestion.php">My Questions</a></li>
+            <li><a href="#">My Questions</a></li>
          <li><a href="#tour">Hi  <?php echo $_SESSION["user"]; ?></a></li>
         <li> <a href="logout.php">Log out</a></li>
          <?php
@@ -274,57 +244,38 @@ if(isset($_SESSION['user'])){
     </div>
   </div>
 </nav>
-  <div id="content" >
+<div id="content" >
             <div id="searchbox">
                 <center>
                     <div class="heading">
                         <h1 class="logo"><div id="i"></div><div id="ntro">Schoolora</div></h1>
                         <p id="tag-line">where questions are themselves the answers</p>
                     </div>
-                    <form action="<?php echo htmlspecialchars( $_SERVER["PHP_SELF"] ); ?>" method="post" enctype="multipart/form-data" >
-                        <input name="text" id="search" type="text" title="Question your Answers" placeholder="Looking for Answers to Some Question, simply just search here... ">
-                        <i class="material-icons" id="sign">search</i>
-                        <input name="submit" type="submit" value="Search" class="up-in" id="qsearch">
-                    </form>
+                   
                 </center>
             </div>
             <div class="pop" id="ta">
-                <h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:(</b>Sorry, Your search didn't match any documents.</h1>
+                <h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:(</b>You don't have any Questions </h1>
             </div>
             <div class="pop" id="tb">
                 <center><h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:)</b>Thank You For Your Answer.</h1></center>
             </div>
             <?php
 
-                if(isset($_POST["submit"])) {
-                    function valid($data){
-                        $data = trim(stripslashes(htmlspecialchars($data)));
-                        return $data;
-                    }
-
-                    function check($data){
-                        $data = strtolower($data);
-                        if( $data != "what" && $data != "how" && $data != "who" && $data != "whom" && $data != "when" && $data != "why" && $data != "which" && $data != "where" && $data != "whose" && $data != "is" && $data != "am" && $data != "are" && $data != "do" && $data != "don't" && $data != "does" && $data != "did" && $data != "done" && $data != "was" && $data != "were" && $data != "has" && $data != "have" && $data != "will" && $data != "shall" && $data != "the" && $data != "i" && $data != "a" && $data != "an" && $data != "we" && $data != "he" && $data != "she" && $data != "")
-                            return 1;
-                        return 0;
-                    }
-                    $text = valid($_POST["text"]);
-                    if($text == NULL){
-                        echo "<script>window.alert('Please Enter something to search.');</script>";
-                    }
-                    else{
-                        $text = preg_replace("/[^A-Za-z0-9]/"," ",$text);
-                        $words = explode(" ",$text);
-                        $format = "select * from display where question like '%";
+                
+                   
+                   
+                       
+                        $format = "select * from quans  where askedby like '%";
                         $query = "";
-                        foreach($words as $word){
-                            if(check($word)){
+                        
+                            if(isset($_SESSION['user'])){
                                 if($query == "")
-                                    $query = $format.$word."%'";
+                                    $query = $format.$_SESSION['user']."%'";
                                 else
-                                    $query .= " union ".$format.$word."%'";
+                                    $query .= " union ".$format.$_SESSION['user']."%'";
                             }
-                        }
+                        
                         if(!$query){
                             echo "<script>window.alert('Search appropriate question.');</script>";
                         }
@@ -339,28 +290,14 @@ if(isset($_SESSION['user'])){
                     <div class='open' style='height: auto; margin: 60px auto -135px;'>
                         
                         <div id='topic'>
-                            <h2 id='topic-head' style="font-weight: normal; border:none; font-size: 22px;">Your Search Results for '<?php echo $text; ?>' are :</h2>
+                            <h2 id='topic-head' style="font-weight: normal; border:none; font-size: 22px;">Your Questions  are :</h2>
                         </div>
 
             <?php $n = 1; $nul=0; while( $row = mysqli_fetch_assoc($r) ) { ?>
                         
                         <div id="qa-block">
                             <div class="question">
-                                <div id="Q">Q.</div><?php echo $row["question"]."<small id='sml'>Asked By: @".$row['askedby']."</small>". 
-                                " <div ><small><form method='POST'>
-                                 
-								<div >
-								<input style='display: none;' name='id' value=".$row['id'].">
- <button formmethod='post' type='button' name='vote' class='btn btn-outline-primary'>Upvote</button>
- 
-</div>
-    
-  </form>".$row['upvote']."</small></div>";
-																		  echo "<script>function myfunction(id){
-																		  questionid=id;
-																		  }
-																		  </script>";
-									 ?>
+                                <div id="Q">Q.</div><?php echo $row["question"]."<small id='sml'>Asked By: @".$row['askedby']."</small>"; ?>
                             </div>
                             <div class="answer">
                                 <?php
@@ -407,9 +344,11 @@ if(isset($_SESSION['user'])){
                         else{
                             echo "<style>#searchbox{display: none;} #ta{display: block;}</style>";
                         }
-                        }
-                    } // a non null if
-                } // isset for submit
+						}
+				
+                        
+                     // a non null if
+                 // isset for submit
             ?>
         </div>
 <div id="footer">

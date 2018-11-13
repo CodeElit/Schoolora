@@ -1,8 +1,8 @@
 <?php
-    $server = "127.0.0.1";
+    $server = "localhost";
     $user = "root";
     $password = "";
-    $db = "schoolora";
+    $db = "pro";
 
     $conn = mysqli_connect($server,$user,$password,$db);
     if(!$conn){
