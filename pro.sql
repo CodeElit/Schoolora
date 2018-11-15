@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2018 at 03:14 PM
+-- Generation Time: Nov 15, 2018 at 05:39 PM
 -- Server version: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -26,6 +26,10 @@ DELIMITER $$
 --
 -- Procedures
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatevote` (`qid` INT(11), `upvotes` INT(11))  BEGIN
+  UPDATE upvotes SET upvote =upvotes WHERE id=qid;
+   END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `userupvote` (`id` INT(11), `username` VARCHAR(255))  BEGIN
    INSERT into userupvote(id,username) values (id,username);
    END$$
@@ -34,8 +38,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `vote` (`id` INT(11))  BEGIN
 INSERT INTO upvotes  (id,upvote) VALUES (id,0);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `vote1` (IN `id` INT(11))  BEGIN
-   INSERT into downvotes (id,downvote) VALUES (id,0);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `votecount` (IN `id` INT(11))  BEGIN
+   SELECT id,count(id)  FROM userupvote u where u.id=id GROUP by (id);
    END$$
 
 DELIMITER ;
@@ -110,6 +114,7 @@ INSERT INTO `downvotes` (`id`, `downvote`) VALUES
 (55, 0),
 (56, 0),
 (57, 0),
+(58, 0),
 (1, 1),
 (45, 20);
 
@@ -154,7 +159,8 @@ INSERT INTO `quacat` (`id`, `category`) VALUES
 (42, 'Social Studies'),
 (43, 'Social Studies'),
 (47, 'Social Studies'),
-(54, 'Social Studies');
+(54, 'Social Studies'),
+(58, 'Social Studies');
 
 -- --------------------------------------------------------
 
@@ -175,7 +181,7 @@ CREATE TABLE `quans` (
 --
 
 INSERT INTO `quans` (`id`, `question`, `answer`, `askedby`, `answeredby`) VALUES
-(1, 'keplers law', 'The Law of Orbits: All planets move in elliptical orbits, with the sun at one focus. 2. The Law of Areas: A line that connects a planet to the sun sweeps out equal areas in equal times. 3. The Law of Periods: The square of the period of any planet is proportional to the cube of the semimajor axis of its orbit.<br>or<br>nice answer jeevottam<br>or<br>ya<br>or<br>kk<br>or<br>kk<br>or<br>aa<br>or<br>00', 'root', 'root'),
+(1, 'keplers law', 'The Law of Orbits: All planets move in elliptical orbits, with the sun at one focus. 2. The Law of Areas: A line that connects a planet to the sun sweeps out equal areas in equal times. 3. The Law of Periods: The square of the period of any planet is proportional to the cube of the semimajor axis of its orbit.<br>or<br>nice answer jeevottam<br>or<br>ya<br>or<br>kk<br>or<br>kk<br>or<br>aa<br>or<br>00<br>or<br>aa', 'root', 'root, @ Admin'),
 (41, 'what are verb tenses', 'Verb tenses. The tense of a verb tells you when a person did something or when something existed or happened. In English, there are three main tenses: the present, the past, and the future.<br>or<br>aa', 'jeevottam', 'root'),
 (42, 'name the flag which was designed by gandhiji in 1921', 'swaraj flag<br>or<br>aa', 'root', 'root'),
 (43, 'in which year did nepal became a constitutional monarchy?', 'Nepal became a constitutional monarchy after the Jana Andolan movement when the new Constitution was adopted i.e. in November 1990. <br>or<br>nice<br>or<br>gg', 'root', 'root'),
@@ -186,13 +192,14 @@ INSERT INTO `quans` (`id`, `question`, `answer`, `askedby`, `answeredby`) VALUES
 (48, 'Carbon bonding', NULL, 'root', NULL),
 (49, 'Carbonâ€“oxygen bond', NULL, 'root', NULL),
 (50, 'can any one explain kepler\'s law..', NULL, 'root', NULL),
-(51, 'What is a example of a noun?', NULL, 'root', NULL),
+(51, 'What is a example of a noun?', 'name place or a thing', 'root', 'Admin'),
 (52, 'what is photosynthesis', 'the process of  breaking down plants food into glucose and salts present in water in the presence of sunlight is called photosynthesis ..for funny answers contact 9686222753', 'root', 'root'),
 (53, 'what is thermodynamics', NULL, 'root', NULL),
 (54, 'Who was Alauddin Khilji wife?', 'Malika-i-Jahan (wife of Alauddin Khalji) Malika-i-Jahan (\"Queen of the World\") was the first and chief wife of Sultan Alauddin Khalji, the second and most powerful ruler of the Khalji dynasty that ruled the Delhi Sultanate.', 'root', 'root'),
 (55, 'what is pronoun', NULL, 'root', NULL),
-(56, 'what is adjective', NULL, 'root', NULL),
-(57, 'why this site', 'for project', 'amoghana', 'amoghana');
+(56, 'what is adjective', 'adjective', 'root', 'root'),
+(57, 'why this site', 'for project', 'amoghana', 'amoghana'),
+(58, 'information about Raja Ram Mohan Roy', NULL, 'root', NULL);
 
 -- --------------------------------------------------------
 
@@ -210,9 +217,6 @@ CREATE TABLE `upvotes` (
 --
 
 INSERT INTO `upvotes` (`id`, `upvote`) VALUES
-(1, 0),
-(42, 0),
-(43, 0),
 (44, 0),
 (45, 0),
 (46, 0),
@@ -221,12 +225,16 @@ INSERT INTO `upvotes` (`id`, `upvote`) VALUES
 (49, 0),
 (50, 0),
 (51, 0),
-(52, 0),
 (53, 0),
 (54, 0),
 (55, 0),
 (56, 0),
+(58, 0),
+(52, 1),
 (57, 1),
+(43, 3),
+(1, 4),
+(42, 5),
 (41, 20);
 
 -- --------------------------------------------------------
@@ -249,8 +257,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `join_date`) VALUES
+(24, 'Admin', '$2y$10$aSYfr7ZSuv4jWCMykdIkTejlKKG0rKr1qHS2LFc3mm5E5izFi9qVa', 'admin', 'admin@schoolora.com', '2018-11-13 17:54:27'),
 (23, 'amoghana', '$2y$10$uPpo3cwNsQc187xglsKR2.7jUr5hq.hrdqmywScu3NsBvd7krgSt2', 'amoghana', 'amoghana.lokurti@wipro.com', '2018-11-12 17:15:24'),
+(26, 'codeelit', '$2y$10$o7il/5eTZ2FQqYgm9oYwnOEeCnkn5cf9JoT0zdEKobEzT8INfbFvy', 'Code Elit', 'jdkcodeelit@gmail.com', '2018-11-15 15:52:05'),
 (19, 'jeevottam', 'jeevo123', 'Jeevottam', '', '2018-11-09 08:20:48'),
+(25, 'kathik', '$2y$10$tLUkCvCLFatxAtgKIakdF.Nw1eO5caqxFn9EL8VaE/aybDeEQbDJa', 'karthik', 'karthik808@gmail.com', '2018-11-15 15:50:33'),
 (21, 'root', '$2y$10$.tEu45YxCNxdk8VZft1LyuzVLlPXIhYmKpz0usPUHCAveC13HNC02', 'Chart', 'amoghana.lokurti@wipro.com', '2018-11-09 08:21:55');
 
 -- --------------------------------------------------------
@@ -263,6 +274,31 @@ CREATE TABLE `userupvote` (
   `id` int(11) UNSIGNED NOT NULL,
   `username` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `userupvote`
+--
+
+INSERT INTO `userupvote` (`id`, `username`) VALUES
+(1, 'Admin'),
+(1, 'codeelit'),
+(1, 'jeevottam'),
+(1, 'root'),
+(41, 'root'),
+(42, 'Admin'),
+(42, 'root'),
+(43, 'Admin'),
+(43, 'codeelit'),
+(43, 'root'),
+(44, 'Admin'),
+(45, 'Admin'),
+(45, 'root'),
+(50, 'Admin'),
+(50, 'root'),
+(51, 'root'),
+(52, 'codeelit'),
+(57, 'Admin'),
+(58, 'root');
 
 -- --------------------------------------------------------
 
@@ -348,13 +384,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `quans`
 --
 ALTER TABLE `quans`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables

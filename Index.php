@@ -29,10 +29,46 @@
     }
 if(isset($_SESSION['user'])){
 	if(isset($_POST['vote'])){
-		$qu="call userupvote(".$_POST['id'].",".$_SESSION["user"].");";
-		echo $qu;
-	}
+		
+		$qu="call userupvote(".$_POST['id'].","."'".$_SESSION["user"]."'".");";
+		
+		 if(mysqli_query($conn,$qu)){
+                
+			 $n=1;
+		 }
+		else{ $n=0;
+			echo "You have voted already;";}
+			 $kamu="call votecount(".$_POST['id'].");";
+			 
+				 if($n==1 && $r=mysqli_query($conn,$kamu)){
+					 
+						   $row = mysqli_fetch_assoc($r) ;
+							  $id=$row['id'];
+							 
+							  $upvotes=$row['count(id)'];
+					 mysqli_next_result( $conn );
+					 echo $id." ".$upvotes;
+				 }
+					 else{echo mysqli_error($conn);}
+		if(isset($id)){
+					 $q="call updatevote(".$id.",".$upvotes.");";
+				 if(mysqli_query($conn,$q)){
+					echo "done"; 
+					 $_POST['vote']=NULL;
+				 }
+			else{echo mysqli_error($conn);}
+					 
+		}
+			 
+            
+            else
+                echo "<style>#searchbox{display: none;} #tbaa{display: block;}</style>";
+		
+        }
+		
 }
+	
+
 ?>
 
 
@@ -294,6 +330,12 @@ if(isset($_SESSION['user'])){
             <div class="pop" id="tb">
                 <center><h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:)</b>Thank You For Your Answer.</h1></center>
             </div>
+            <div class="pop" id="tba">
+                <center><h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:)</b>Thank You For Your Vote.</h1></center>
+            </div>
+            <div class="pop" id="tbaa">
+                <center><h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:)</b>You have already voted</h1></center>
+            </div>
             <?php
 
                 if(isset($_POST["submit"])) {
@@ -346,21 +388,15 @@ if(isset($_SESSION['user'])){
                         
                         <div id="qa-block">
                             <div class="question">
-                                <div id="Q">Q.</div><?php echo $row["question"]."<small id='sml'>Asked By: @".$row['askedby']."</small>". 
-                                " <div ><small><form method='POST'>
-                                 
-								<div >
-								<input style='display: none;' name='id' value=".$row['id'].">
- <button formmethod='post' type='button' name='vote' class='btn btn-outline-primary'>Upvote</button>
- 
-</div>
-    
-  </form>".$row['upvote']."</small></div>";
-																		  echo "<script>function myfunction(id){
-																		  questionid=id;
-																		  }
-																		  </script>";
+                                <div id="Q">Q.</div><?php echo $row["question"]."<small id='sml'>Asked By: @".$row['askedby']."  Upvotes ".$row['upvote']."</small>"; 
+                               
 									 ?>
+                           <form id="f<?php echo $n; ?> " action="<?php echo htmlspecialchars( $_SERVER["PHP_SELF"] ); ?>" method="post" enctype="multipart/form-data">
+<!--                                    <input type="button" value="Click here to answer." id="ans_b" >-->
+                                    
+                                    <input style="display: none;" name="id" value="<?php echo $row['id'] ?>">
+                                    <input type="submit" name="vote" value="Upvote"  id="uv" style="color:#000;">
+								</form>
                             </div>
                             <div class="answer">
                                 <?php

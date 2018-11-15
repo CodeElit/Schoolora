@@ -578,6 +578,19 @@ small#sml{
     margin: 151.5px auto;
     font-size: 12px;
 }
+#tba{
+    display: none;
+    text-align: center;
+    margin: 151.5px auto;
+    font-size: 12px;
+}
+#tbaa{
+    display: none;
+    text-align: center;
+    margin: 151.5px auto;
+    font-size: 12px;
+}
+
 
 a#try:hover{
     text-decoration: underline;
