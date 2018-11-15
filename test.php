@@ -29,40 +29,43 @@
     }
 if(isset($_SESSION['user'])){
 	if(isset($_POST['vote'])){
-		$n=0;
+		
 		$qu="call userupvote(".$_POST['id'].","."'".$_SESSION["user"]."'".");";
 		
 		 if(mysqli_query($conn,$qu)){
-                 echo "<style>#searchbox{display: none;} #vote{display: block;}</style>";
-			 $n=1;
-			 header("index.php");
-		 
-		
-			 $kamu="call votecount(".$_POST['id'].");";
+                
 			 
-				 if($n==1 && $r=mysqli_query($conn,$kamu)){
+			  $kamu="call votecount(".$_POST['id'].");";
+			 
+				 if( $r=mysqli_query($conn,$kamu)){
 					 
 						   $row = mysqli_fetch_assoc($r) ;
 							  $id=$row['id'];
 							 
 							  $upvotes=$row['count(id)'];
 					 mysqli_next_result( $conn );
-					
-				 }
-					 else{ mysqli_error($conn);}
-		if(isset($id)){
-					 $q="call updatevote(".$id.",".$upvotes.");";
-				 if(mysqli_query($conn,$q)){
-					 echo "done";
-					 $_POST['vote']=NULL;
-				 }
-			else{ mysqli_error($conn);}
 					 
-		}
-			 
+					  $q="call updatevote(".$id.",".$upvotes.");";
+				 if(mysqli_query($conn,$q)){
+					 echo "<style>#searchbox{display: none;} #tba{display: block;}</style>";
+					 $_POST['vote']=NULL;
 		 }
-            else
-                echo "<style>#searchbox{display: none;} #voted{display: block;}</style>";
+				 }
+		 }
+		else {
+			
+			echo "<style>#searchbox{display: none;} #tbaa{display: block;}</style>";}
+			
+					
+				 
+					
+		
+			
+					 
+		
+			 
+            
+            
 		
         }
 		
@@ -330,10 +333,10 @@ if(isset($_SESSION['user'])){
             <div class="pop" id="tb">
                 <center><h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:)</b>Thank You For Your Answer.</h1></center>
             </div>
-            <div class="pop" id="vote">
+            <div class="pop" id="tba">
                 <center><h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:)</b>Thank You For Your Vote.</h1></center>
             </div>
-            <div class="pop" id="voted">
+            <div class="pop" id="tbaa">
                 <center><h1><b style="font-size: 1.5em; margin: -60px auto 10px; display: block;">:)</b>You have already voted</h1></center>
             </div>
             <?php
